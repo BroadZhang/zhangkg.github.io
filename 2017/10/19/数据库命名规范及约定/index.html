@@ -49,7 +49,7 @@
 <link rel="shortcut icon" href="/images/favicon.png">
 
 
-<title>第一篇文章 - Hexo</title>
+<title>数据库命名规范及约定 - Hexo</title>
 
 <meta name="keywords" content="">
 
@@ -176,24 +176,142 @@
                 </a>
                 <p><span class="label">作者</span>
                     <a href="" target="_blank"></a>
-                    <span title="最后编辑于2017-10-16">2017-10-16</span>
+                    <span title="最后编辑于2017-10-19">2017-10-19</span>
                 </p>
                 <p></p>
             </div>
-            <h2 class="post-title">第一篇文章</h2>
+            <h2 class="post-title">数据库命名规范及约定</h2>
             <div class="post-meta">
-                本文总共119个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+                本文总共1869个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
             </div>
         </div>
         <div class="post-content markdown-body">
-            <h1 id="这是-H1"><a href="#这是-H1" class="headerlink" title="这是 H1"></a>这是 H1</h1><h2 id="这是-H2"><a href="#这是-H2" class="headerlink" title="这是 H2"></a>这是 H2</h2><h6 id="这是-H6"><a href="#这是-H6" class="headerlink" title="这是 H6"></a>这是 H6</h6><blockquote>
-<h2 id="这是一个标题。"><a href="#这是一个标题。" class="headerlink" title="这是一个标题。"></a>这是一个标题。</h2><ol>
-<li>这是第一行列表项。</li>
-<li>这是第二行列表项。</li>
+            <h2 id="一、【操作规范】"><a href="#一、【操作规范】" class="headerlink" title="一、【操作规范】"></a>一、【操作规范】</h2><ol>
+<li>如无备注，则表中的第一个id字段一定是主键且为自动增长；</li>
+<li>如无备注，则数值类型的字段请使用UNSIGNED属性；</li>
+<li>如无备注，排序字段order_id在程序中默认使用降序排列；</li>
+<li>如无备注，所有字段都设置NOT NULL，并设置默认值；</li>
+<li>如无备注，所有的布尔值字段，如is_hot、is_deleted，都必须设置一个默认值，并设为0；</li>
+<li>所有的数字类型字段，都必须设置一个默认值，并设为0；</li>
+<li>针对varchar类型字段的程序处理，请验证用户输入，不要超出其预设的长度；</li>
+<li>建表时将数据字典中的字段中文名和属性备注写入数据表的备注中(“PK、自动增长”不用写)；</li>
+<li>如无说明，建表时一律采用innodb引擎；</li>
 </ol>
-<p>给出一些例子代码：</p>
-<pre><code>return shell_exec(&quot;echo $input | $markdown_script&quot;);
-</code></pre></blockquote>
+<h2 id="二、【常用表名约定】"><a href="#二、【常用表名约定】" class="headerlink" title="二、【常用表名约定】"></a>二、【常用表名约定】</h2><blockquote>
+<p>表前缀用项目名称首字母缩写；<br>所有表名都小写，单词之间用下划线分开，单词都用单数形式</p>
+</blockquote>
+<ol>
+<li>user – 用户</li>
+<li>category – 分类</li>
+<li>goods – 商品、产品等一切可交易网站的物品都用此命名</li>
+<li>good_gallery – 物品的相册</li>
+<li>good_cate – 物品的分类，除了单独作为表名，其他地方分类单词一律用缩写cate</li>
+<li>attr – 属性</li>
+<li>article – 文章、新闻、帮助中心等以文章形式出现的，一般都用此命名</li>
+<li>cart – 购物车</li>
+<li>feedback – 用户反馈</li>
+<li>order – 订单</li>
+<li>site_nav – 包括页头和页尾导航</li>
+<li>site_config – 系统配置表</li>
+<li>admin – 后台用户 【RBAC标准表】</li>
+<li>role – 后台用户角色【RBAC标准表】</li>
+<li>access – 后台操作权限，相当于action【RBAC标准表】</li>
+<li>role_admin – 后台用户对应的角色【RBAC标准表】</li>
+<li>access_role – 后台角色对应的权限【RBAC标准表】</li>
+</ol>
+<h2 id="三、【常用列名约定】"><a href="#三、【常用列名约定】" class="headerlink" title="三、【常用列名约定】"></a>三、【常用列名约定】</h2><ol>
+<li>表名_id – 通常用作外键命名</li>
+<li>cid – 特殊的编号，带有元数据，方便关联查询，你可以把它理解成类别(层次)编号。举个例子，产品在分类时，往往需要将其归类到子分类下，相应的字段中也一般只记录子分类的id，这时若需要知道该产品属于哪个主分类，就需要通过子分类信息再查询到主分类信息，这是比较麻烦的，cid字段就是要解决这个问题。一般的站点几十个分类肯定是够用了，所以这里假设某一主分类的cid为11，则子分类的cid从1101开始编号，处理时只需截取前两位数值便可知道该产品属于哪一个主分类了。</li>
+<li>add_time – 添加时间、上架时间等</li>
+<li>last_time – 最后操作时间，如登录、修改记录</li>
+<li>expire_time – 过期时间</li>
+<li>name – 商品名称、商家名称等，不要跟title混用，title只用于文章标题、职称等</li>
+<li>price – 价格</li>
+<li>thumb – 只要是列表页面中的窗口图，一律用此命名</li>
+<li>image_src – 相册中的图片地址一律用此命名，不要出现各种img,image,img_url,thumb_url等</li>
+<li>head_thumb – 用户头像， 虽然有点长，一定要遵守。不要出现上述情况</li>
+<li>image_alt – 相册中图片的alt属性</li>
+<li>desc – 描述、简介，比如goods_desc，不要出现goods_txt这种</li>
+<li>details – 详情、文章内容等</li>
+<li>order_id – 排序</li>
+<li>telephone – 座机号码</li>
+<li>mobile – 手机号码</li>
+<li>phone – 当不区分手机和座机时，请用phone命名</li>
+<li>address – 地址，单独出现不要用addr缩写，组合出现时需用缩写，比如mac地址，mac_addr</li>
+<li>zipcode – 邮编</li>
+<li>region – 地区，大的区域，比如记录杭州市、温州市等</li>
+<li>area – 区域，小的，比如上城区，江干区等</li>
+<li>avg_cost – 人均消费</li>
+</ol>
+<h2 id="四、【数据表字段设计范例】"><a href="#四、【数据表字段设计范例】" class="headerlink" title="四、【数据表字段设计范例】"></a>四、【数据表字段设计范例】</h2><h6 id="分类表（t-category）"><a href="#分类表（t-category）" class="headerlink" title="分类表（t_category）"></a>分类表（t_category）</h6><table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>列名</th>
+<th>类型</th>
+<th>属性备注</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>流水号</td>
+<td>id</td>
+<td>int(10)</td>
+<td>PK、自动增长</td>
+<td></td>
+</tr>
+<tr>
+<td>特殊编号</td>
+<td>cid</td>
+<td>varchar(4)</td>
+<td></td>
+<td>第一个主分类为11、第一个子分类为1101，类推，仅支持二级分类</td>
+</tr>
+<tr>
+<td>名称</td>
+<td>name</td>
+<td>varchar(10)</td>
+<td></td>
+<td>页面中需注明输入不超过10个字</td>
+</tr>
+<tr>
+<td>父分类</td>
+<td>pid</td>
+<td>int(10)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>统计量</td>
+<td>count</td>
+<td>int(10)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>是否热门</td>
+<td>is_hot</td>
+<td>tinyint(1)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>首页显示</td>
+<td>is_index</td>
+<td>tinyint(1)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>排序</td>
+<td>order_id</td>
+<td>int(10)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
         </div>
         <div class="post-tool">
